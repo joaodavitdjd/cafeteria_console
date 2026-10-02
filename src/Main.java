@@ -1,20 +1,59 @@
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
-import Produto.Produto;
+import produto.Produto;
+import menu.Opcoes;
 
 public class Main {
+
     public static void main(String[] args) {
-
         Scanner ler = new Scanner(System.in);
-        Produto Prod = new Produto();
+    // ----------   menu  ----------
+        Opcoes opc = new Opcoes();
+        List<Produto> produtos = new ArrayList<>();
+        int opcao = 0;
 
-        System.out.print("qual o nome do produto ");
-        Prod.nome = ler.nextLine();
-        System.out.print("qual o valor do produto ");
-        Prod.preco = ler.nextDouble();
-        System.out.print("qual a quantidade do produto ");
-        Prod.quantidade = ler.nextInt();
+        while (opcao != 5) {
+            opc.exibirOpcoes();
+            opcao = Integer.parseInt(ler.nextLine());
 
-        System.out.println("o nome do produto é: " + Prod.nome + ", o valor do produto é: " + Prod.preco +
-                " R$, a quantidade do produto é: " + Prod.quantidade + "un");
+            switch (opcao) {
+                case 1:
+                    produtos.add(cadastrarProduto(ler));
+                    System.out.println("Produto cadastrado!");
+                    break;
+                case 3:
+                    listarProdutos(produtos);
+                    break;
+                case 5:
+                    System.out.println("Saindo...");
+                    break;
+                default:
+                    System.out.println("Opção ainda não feita ou inválida!");
+            }
+        }
+    }
+    // ----------   menu  ----------
+
+    // ---------- produto ----------
+    public static Produto cadastrarProduto(Scanner ler) {
+        System.out.print("Qual o nome do produto? ");
+        String nome = ler.nextLine();
+        System.out.print("Qual o valor do produto? ");
+        double preco = Double.parseDouble(ler.nextLine());
+        System.out.print("Qual o estoque do produto? ");
+        int estoque = Integer.parseInt(ler.nextLine());
+
+        return new Produto(nome, preco, estoque);
+    }
+
+    public static void listarProdutos(List<Produto> produtos) {
+        if (produtos.isEmpty()) {
+            System.out.println("Nenhum produto cadastrado.");
+            return;
+        }
+        for (Produto p : produtos) {
+            p.exibirInformacoes();
+        }
     }
 }
