@@ -17,8 +17,11 @@ public class Produto {
 
     public int getEstoque()  { return estoque; }
 
+    public void setEstoque(int estoque) {
+        this.estoque = estoque;
+    }
     public void exibirInformacoes(){
-        System.out.print("Produto: "+ nome + " | preço: R$ " + String.format("%.2f", preco)
+        System.out.println("Produto: "+ nome + " | preço: R$ " + String.format("%.2f", preco)
                 + " | Estoque: " + estoque + "un");
     }
 }
