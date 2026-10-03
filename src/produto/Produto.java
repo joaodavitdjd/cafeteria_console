@@ -4,24 +4,34 @@ public class Produto {
     private String nome;
     private double preco;
     private int estoque;
+    private Categoria categoria;
 
-    public Produto(String nome, double preco, int estoque){
+    public Produto(String nome, double preco, int estoque, Categoria categoria) {
         this.nome = nome;
         this.preco = preco;
         this.estoque = estoque;
+        this.categoria = categoria;
     }
 
-    public String getNome()  { return nome; }
+    public String getNome() {return nome;}
 
-    public double getPreco() { return preco; }
+    public double getPreco() {return preco;}
 
-    public int getEstoque()  { return estoque; }
+    public int getEstoque() {return estoque;}
 
     public void setEstoque(int estoque) {
+        if (estoque < 0) {
+            System.out.println("O estoque não pode ser negativo.");
+            return;
+        }
         this.estoque = estoque;
     }
-    public void exibirInformacoes(){
-        System.out.println("Produto: "+ nome + " | preço: R$ " + String.format("%.2f", preco)
-                + " | Estoque: " + estoque + "un");
+
+    public Categoria getCategoria() { return categoria; }
+
+    public void exibirInformacoes() {
+        System.out.println("Categoria: " + categoria + " | Produto: " + nome + " | preço: R$ " + String.format("%.2f", preco)
+                + " | Estoque: " + estoque + " un");
     }
 }
+
