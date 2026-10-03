@@ -4,9 +4,11 @@ import java.util.Scanner;
 import estoque.AdicionarEstoque;
 import estoque.RemoverEstoque;
 import menu.Opcoes;
+import pedido.StatusPedido;
 import produto.Categoria;
 import produto.Produto;
 import pedido.Pedido;
+import menu.PainelPedidos;
 
 public class Main {
 
@@ -22,12 +24,13 @@ public class Main {
         produtos.add(new Produto("Pão de Queijo", 4.50, 30, Categoria.COMIDA));
 
         List<Pedido> pedidos = new ArrayList<>();
+        PainelPedidos painel = new PainelPedidos();
 
         int opcao = 0;
 
-        while (opcao != 7) {
+        while (opcao != 9) {
             opc.exibirOpcoes();
-            opcao = lerInteiro(ler, "O que deseja fazer? ", 1, 7);
+            opcao = lerInteiro(ler, "O que deseja fazer? ", 1, 9);
 
             switch (opcao) {
                 case 1:
@@ -52,7 +55,7 @@ public class Main {
                     }
                     break;
                 case 5:
-                    Pedido novo = criarPedido(ler, produtos);
+                    Pedido novo = criarPedido(ler, produtos, pedidos.size() + 1);
                     if (novo != null) {
                         pedidos.add(novo);
                         System.out.println("\nPedido registrado!");
@@ -63,6 +66,12 @@ public class Main {
                     listarPedidos(pedidos);
                     break;
                 case 7:
+                    painel.exibir(pedidos);
+                    break;
+                case 8:
+                    marcarPronto(ler, pedidos, painel);
+                    break;
+                case 9:
                     System.out.println("Saindo...");
                     break;
             }
@@ -169,20 +178,44 @@ public class Main {
     }
 
     // ---------- pedido ----------
-    public static Pedido criarPedido(Scanner ler, List<Produto> produtos) {
+    public static Produto escolherProduto(Scanner ler, List<Produto> produtos) {
+        System.out.println("\n--- PRODUTOS DISPONÍVEIS ---");
+        for (int i = 0; i < produtos.size(); i++) {
+            Produto p = produtos.get(i);
+            String situacao = p.getEstoque() > 0 ? p.getEstoque() + " un" : "ESGOTADO";
+            System.out.println(String.format("%d - %-20s R$ %6.2f  (%s)",
+                    i + 1, p.getNome(), p.getPreco(), situacao));
+        }
+        System.out.println("0 - Voltar");
+
+        while (true) {
+            int escolha = lerInteiro(ler, "Número do produto: ", 0, produtos.size());
+            if (escolha == 0) {
+                return null;
+            }
+            Produto p = produtos.get(escolha - 1);
+            if (p.getEstoque() == 0) {
+                System.out.println("Produto esgotado. Escolha outro.");
+            } else {
+                return p;
+            }
+        }
+    }
+
+    public static Pedido criarPedido(Scanner ler, List<Produto> produtos, int numeroDoPedido) {
         if (produtos.isEmpty()) {
             System.out.println("Cadastre pelo menos um produto antes de criar um pedido.");
             return null;
         }
 
-        Pedido pedido = new Pedido(lerTexto(ler, "Nome do cliente: "));
+        Pedido pedido = new Pedido(numeroDoPedido, lerTexto(ler, "Nome do cliente: "));
         Produto p = null;
         int continuar = 1;
 
         while (continuar != 2) {
             // 1 = escolher outro produto | 3 = manter o mesmo produto e trocar a quantidade
             if (continuar == 1) {
-                p = pedirProduto(ler, produtos);
+                p = escolherProduto(ler, produtos);
             }
 
             boolean faltouEstoque = false;
@@ -218,9 +251,31 @@ public class Main {
             return;
         }
         System.out.println("--- Pedidos ---");
-        for (int i = 0; i < pedidos.size(); i++) {
-            System.out.println("\nPedido " + (i + 1));
-            pedidos.get(i).exibirResumo();
+        for (Pedido p : pedidos) {
+            System.out.println();
+            p.exibirResumo();
         }
+    }
+
+    public static void marcarPronto(Scanner ler, List<Pedido> pedidos, PainelPedidos painel) {
+        if (pedidos.isEmpty()) {
+            System.out.println("Nenhum pedido registrado.");
+            return;
+        }
+
+        painel.exibir(pedidos);
+        int numero = lerInteiro(ler, "\nNúmero do pedido que ficou pronto (0 para voltar): ", 0, pedidos.size());
+        if (numero == 0) {
+            return;
+        }
+
+        Pedido p = pedidos.get(numero - 1);
+        if (p.getStatus() == StatusPedido.PRONTO) {
+            System.out.println("Esse pedido já está pronto.");
+            return;
+        }
+
+        p.marcarComoPronto();
+        System.out.println(String.format("Pedido #%03d pronto para retirada!", p.getNumero()));
     }
 }

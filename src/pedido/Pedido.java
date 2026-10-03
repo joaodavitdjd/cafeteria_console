@@ -5,13 +5,23 @@ import java.util.List;
 import produto.Produto;
 
 public class Pedido {
+    private int numero;
     private String cliente;
+    private StatusPedido status = StatusPedido.EM_PREPARO;
     private List<ItemPedido> itens = new ArrayList<>();
 
-    public Pedido(String cliente) {
+    public Pedido(int numero, String cliente) {
+        this.numero = numero;
         this.cliente = cliente;
     }
-    public String getCliente() { return cliente; }
+
+    public int getNumero()          { return numero; }
+    public String getCliente()      { return cliente; }
+    public StatusPedido getStatus() { return status; }
+
+    public void marcarComoPronto() {
+        this.status = StatusPedido.PRONTO;
+    }
 
     public boolean adicionarItem(Produto produto, int quantidade) {
         if (quantidade <= 0 || quantidade > produto.getEstoque()) {
@@ -22,7 +32,7 @@ public class Pedido {
         return true;
     }
 
-    public boolean estaVazio(){
+    public boolean estaVazio() {
         return itens.isEmpty();
     }
 
@@ -33,8 +43,9 @@ public class Pedido {
         }
         return total;
     }
+
     public void exibirResumo() {
-        System.out.println("Cliente: " + cliente);
+        System.out.println(String.format("Pedido #%03d | Cliente: %s | %s", numero, cliente, status));
         for (ItemPedido item : itens) {
             item.exibirInformacoes();
         }

@@ -11,7 +11,9 @@ public class Opcoes {
                 (4) -> Remover estoque
                 (5) -> Novo pedido
                 (6) -> Listar pedidods
-                (7) -> sair
+                (7) -> Painel de pedidos
+                (8) -> Marcar pedido como pronto
+                (9) -> sair
                 
                 """);
     }
