@@ -5,6 +5,7 @@ public class Produto {
     private double preco;
     private int estoque;
     private Categoria categoria;
+    private int id;
 
     public Produto(String nome, double preco, int estoque, Categoria categoria) {
         this.nome = nome;
@@ -12,13 +13,18 @@ public class Produto {
         this.estoque = estoque;
         this.categoria = categoria;
     }
+    public Produto(int id, String nome, double preco, int estoque, Categoria categoria) {
+        this(nome, preco, estoque, categoria);
+        this.id = id;
+    }
+    public int getId() { return id; }
+    public void setId(int id) { this.id = id; }
 
     public String getNome() {return nome;}
 
     public double getPreco() {return preco;}
 
     public int getEstoque() {return estoque;}
-
     public void setEstoque(int estoque) {
         if (estoque < 0) {
             System.out.println("O estoque não pode ser negativo.");
