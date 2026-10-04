@@ -2,6 +2,7 @@
 
 Sistema de console em Java para controlar produtos, estoque e pedidos de uma cafeteria, com dados salvos em PostgreSQL via JDBC.
 Projeto de estudo de Java, POO e banco de dados, feito passo a passo.
+Deixei o mapa mental que utilizei em PDF.
 
 ## Funcionalidades
 
